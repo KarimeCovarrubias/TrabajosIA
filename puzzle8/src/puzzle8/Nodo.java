@@ -56,10 +56,15 @@ public class Nodo {
 
         for (String estadoHijo : estadoHijos) {
             if (estadoHijo != null) {
-                Nodo nodoHijo = new Nodo(estadoHijo, this, this.nivel + 1);
+                Nodo nodoHijo = new Nodo(estadoHijo, this);
+                nodoHijo.costo = this.costo + 1;
                 sucesores.add(nodoHijo);
             }
         }
         return sucesores;
+    }
+
+    public void setCosto(int costo) {
+        this.costo = costo;
     }
 }

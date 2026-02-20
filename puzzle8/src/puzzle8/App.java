@@ -21,6 +21,15 @@ public class App {
         Nodo solucionDFS = dfs.buscar(objetivo);
         long finDFS = System.currentTimeMillis();
 
+        // ------------------ UCS ------------------
+        BusquedaCostoUniforme ucs = new BusquedaCostoUniforme(new Nodo(inicial));
+        long inicioUCS = System.currentTimeMillis();
+        Nodo solucionUCS = ucs.buscar(objetivo);
+        long finUCS = System.currentTimeMillis();
+
+        // -------------- HEURISTICA ---------------
+        Heuristica heu = new Heuristica();
+
         System.out.println("========== RESULTADOS ==========");
 
         if (solucionBFS != null) {
@@ -35,6 +44,13 @@ public class App {
             System.out.println("Nivel: " + solucionDFS.getNivel());
             System.out.println("Nodos visitados: " + dfs.nodosVisitados);
             System.out.println("Tiempo: " + (finDFS - inicioDFS) + " ms");
+        }
+
+        if (solucionUCS != null) {
+            System.out.println("\nSolución UCS");
+            System.out.println("Nivel: " + solucionUCS.getNivel());
+            System.out.println("Nodos visitados: " + ucs.nodosVisitados);
+            System.out.println("Tiempo: " + (finUCS - inicioUCS) + " ms");
         }
     }
 }
