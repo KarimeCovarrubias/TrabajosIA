@@ -28,7 +28,9 @@ public class App {
         long finUCS = System.currentTimeMillis();
 
         // -------------- HEURISTICA ---------------
-        Heuristica heu = new Heuristica();
+        long inicioH = System.nanoTime();
+        int h = Heuristica.conflictoLineal(inicial, objetivo);
+        long finH = System.nanoTime();
 
         System.out.println("========== RESULTADOS ==========");
 
@@ -52,5 +54,9 @@ public class App {
             System.out.println("Nodos visitados: " + ucs.nodosVisitados);
             System.out.println("Tiempo: " + (finUCS - inicioUCS) + " ms");
         }
+
+        long resultado = finH - inicioH;
+        System.out.println("\nSolución Heurística \nConflicto Lineal: " + h);
+        System.out.println("Tiempo: " + (resultado) + " ns = " + (resultado / 1000000.0) + " ms");
     }
 }
