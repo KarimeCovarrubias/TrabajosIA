@@ -60,7 +60,8 @@ public class SearchTree {
         NodeUtil.printSolution(currentNode, stateSets, root, time);
 
     }
-//**********************************************************************************************
+
+    //**********************************************************************************************
     public void depthFirstSearch() {
         // stateSet is a set that contains node that are already visited
         Set<String> stateSets = new HashSet<String>();
@@ -174,6 +175,78 @@ public class SearchTree {
         // Here we try to navigate from the goal node to its parent( and its parent's parent and so on) to find the path
         NodeUtil.printSolution(currentNode, stateSets, root, time);
     }
+    
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Node solutionNode;
+    private int nodesExpanded = 0;
+
+    public void idaStar(Heuristic heuristic) {
+        int threshold = calculateHeuristic(root.getState(), heuristic);
+        nodesExpanded = 0; // Reiniciar contador
+        solutionNode = null;
+        
+        while (true) {
+            int temp = search(root, 0, threshold, heuristic);
+
+            if (temp == -1) { // Solución encontrada
+                //System.out.println("Solución encontrada.");
+                // Pasamos 'nodesExpanded' como el parámetro 'time'
+                NodeUtil.printSolution(solutionNode, null, root, nodesExpanded);
+                return;
+            }
+
+            if (temp == Integer.MAX_VALUE) {
+                System.out.println("No se encontró solución.");
+                return;
+            }
+            threshold = temp; // Actualizar el límite con el valor mínimo que excedió
+        }
+    }
+
+    private int search(Node node, int g, int threshold, Heuristic heuristic) {
+        int h = calculateHeuristic(node.getState(), heuristic);
+        int f = g + h;
+
+        // Poda por umbral
+        if (f > threshold) return f;
+
+        // Condición de éxito
+        if (node.getState().equals(goalSate)) {
+            solutionNode = node;
+            return -1;
+        }
+        nodesExpanded++;
+
+        int min = Integer.MAX_VALUE;
+        List<String> successors = NodeUtil.getSuccessors(node.getState());
+
+        for (String s : successors) {
+            if (node.getParent() != null && s.equals(node.getParent().getState())) {
+                continue;
+            }
+            Node child = new Node(s);
+            child.setParent(node);
+
+            // En IDA*, el costo de paso (g) suele ser 1 por movimiento
+            int temp = search(child, g + 1, threshold, heuristic);
+
+            if (temp == -1) return -1;
+
+            if (temp < min) min = temp;
+        }
+        return min;
+    }
+    
+    private int calculateHeuristic(String state, Heuristic heuristic) {
+        if (heuristic == Heuristic.H_TWO)
+            return heuristicTwo(state, goalSate);
+
+        else if (heuristic == Heuristic.H_FOUR)
+            return heuristicFour(state, goalSate);
+
+        return 0;
+    }
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Find the goal using A* algorithm. The huristic is the real cost to the current node from the initial Node
@@ -217,6 +290,16 @@ public class SearchTree {
                     , heuristicTwo(child.getState(), goalSate));
                 else if (heuristic == Heuristic.H_THREE)
                     child.setTotalCost(currentNode.getTotalCost() + Character.getNumericValue(child.getState().charAt(child.getParent().getState().indexOf('0'))), heuristicThree(child.getState(), goalSate));
+                else if (heuristic == Heuristic.H_FOUR)
+                    child.setTotalCost(
+                        currentNode.getTotalCost() + 
+                        Character.getNumericValue(
+                            child.getState().charAt(
+                                child.getParent().getState().indexOf('0')
+                            )
+                        ),
+                        heuristicFour(child.getState(), goalSate)
+                    );
                 nodePriorityQueue.add(child);
 
             }
@@ -301,6 +384,7 @@ public class SearchTree {
         return difference;
     }
 
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //*************************************************************************************************
     // This heuristic estimates the cost to the goal from current state by calculating the 
     // Manhathan distance from each misplaced
@@ -328,6 +412,7 @@ public class SearchTree {
         }
         return difference;
     }
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //***************************************************************************************************
     // This heurisic is almost similar to heuristicTwo except that heuristicThree has higher value. 
@@ -365,4 +450,79 @@ public class SearchTree {
         }
         return difference;
     }
+    
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private int linearConflict(String currentState, String goalState) {
+        int size = (int) Math.sqrt(currentState.length());
+        int conflict = 0;
+
+        // Revisar conflictos en filas
+        for (int row = 0; row < size; row++) {
+            for (int col1 = 0; col1 < size; col1++) {
+                int index1 = row * size + col1;
+                char tile1 = currentState.charAt(index1);
+
+                if (tile1 == '0') continue;
+
+                int goalIndex1 = goalState.indexOf(tile1);
+                int goalRow1 = goalIndex1 / size;
+
+                if (goalRow1 != row) continue;
+
+                for (int col2 = col1 + 1; col2 < size; col2++) {
+                    int index2 = row * size + col2;
+                    char tile2 = currentState.charAt(index2);
+
+                    if (tile2 == '0') continue;
+
+                    int goalIndex2 = goalState.indexOf(tile2);
+                    int goalRow2 = goalIndex2 / size;
+
+                    if (goalRow2 != row) continue;
+
+                    if (goalIndex1 > goalIndex2) {
+                        conflict += 2;
+                    }
+                }
+            }
+        }
+
+        // Revisar conflictos en columnas
+        for (int col = 0; col < size; col++) {
+            for (int row1 = 0; row1 < size; row1++) {
+                int index1 = row1 * size + col;
+                char tile1 = currentState.charAt(index1);
+
+                if (tile1 == '0') continue;
+
+                int goalIndex1 = goalState.indexOf(tile1);
+                int goalCol1 = goalIndex1 % size;
+
+                if (goalCol1 != col) continue;
+
+                for (int row2 = row1 + 1; row2 < size; row2++) {
+                    int index2 = row2 * size + col;
+                    char tile2 = currentState.charAt(index2);
+
+                    if (tile2 == '0') continue;
+
+                    int goalIndex2 = goalState.indexOf(tile2);
+                    int goalCol2 = goalIndex2 % size;
+
+                    if (goalCol2 != col) continue;
+
+                    if (goalIndex1 > goalIndex2) {
+                        conflict += 2;
+                    }
+                }
+            }
+        }
+        return conflict;
+    }
+    
+    private int heuristicFour(String currentState, String goalState) {
+        return heuristicTwo(currentState, goalState) 
+               + linearConflict(currentState, goalState);
+    }
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

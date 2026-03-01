@@ -1,6 +1,5 @@
 package puzzle24;
 
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -150,7 +149,5 @@ public class MyQueue<Item> implements Iterable<Item> {
 
             N = N + queue.size();
         }
-
     }
-
 }

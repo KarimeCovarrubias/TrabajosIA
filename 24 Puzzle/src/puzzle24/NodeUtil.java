@@ -45,23 +45,26 @@ public class NodeUtil {
     }
 
     public static void printSolution(Node goalNode, Set<String> visitedNodes, Node root, int time) {
-        int totalCost = 0;
-        Stack<Node> solutionStack = new Stack<>();
-        solutionStack.push(goalNode);
 
-        while (!goalNode.getState().equals(root.getState())) {
-            goalNode = goalNode.getParent();
-            solutionStack.push(goalNode);
+        int totalCost = 0;
+
+        Stack<Node> solutionStack = new Stack<>();
+        Node currentNode = goalNode;
+
+        while (currentNode != null) {
+            solutionStack.push(currentNode);
+            currentNode = currentNode.getParent();
         }
 
-        String sourceState = root.getState();
-        String destinationState;
+        int moves = solutionStack.size() - 1;
+
+        String sourceState = solutionStack.peek().getState();
         int cost = 0;
 
         while (!solutionStack.isEmpty()) {
 
             Node current = solutionStack.pop();
-            destinationState = current.getState();
+            String destinationState = current.getState();
 
             if (!sourceState.equals(destinationState)) {
 
@@ -74,26 +77,45 @@ public class NodeUtil {
                 cost = Character.getNumericValue(movedTile);
                 totalCost += cost;
             }
-            sourceState = destinationState;
 
+            System.out.println("Solution length (movimientos): " + moves);
             printBoard(destinationState);
 
             System.out.println("Cost of movement: " + cost);
             System.out.println("-----------------------------------");
+
+            sourceState = destinationState;
         }
 
-        System.out.println("Transitions: " + (solutionStack.size()));
-        System.out.println("Visited states: " + visitedNodes.size());
+        System.out.println("Transitions: " + moves);
+
+        if (visitedNodes != null)
+            System.out.println("Visited states: " + visitedNodes.size());
+        else
+            System.out.println("Visited states: N/A");
+
         System.out.println("Total cost: " + totalCost);
         System.out.println("Nodes expanded: " + time);
     }
 
-    private static void printBoard(String state) {
+    private static void printBoard2(String state) {
         int size = (int) Math.sqrt(state.length());
 
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 System.out.print(state.charAt(r * size + c) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+    
+    private static void printBoard(String state) {
+        int size = (int) Math.sqrt(state.length());
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                char tile = state.charAt(r * size + c);
+                System.out.printf("%2s ", (tile == '0' ? "." : tile)); 
             }
             System.out.println();
         }
