@@ -182,16 +182,17 @@ public class SearchTree {
 
     public void idaStar(Heuristic heuristic) {
         int threshold = calculateHeuristic(root.getState(), heuristic);
+        Set<String> visitedNodes = new HashSet<>();
         nodesExpanded = 0; // Reiniciar contador
         solutionNode = null;
         
         while (true) {
-            int temp = search(root, 0, threshold, heuristic);
+            int temp = search(root, 0, threshold, heuristic, visitedNodes);
 
             if (temp == -1) { // Solución encontrada
                 //System.out.println("Solución encontrada.");
                 // Pasamos 'nodesExpanded' como el parámetro 'time'
-                NodeUtil.printSolution(solutionNode, null, root, nodesExpanded);
+                NodeUtil.printSolution(solutionNode, visitedNodes, root, nodesExpanded);
                 return;
             }
 
@@ -203,14 +204,12 @@ public class SearchTree {
         }
     }
 
-    private int search(Node node, int g, int threshold, Heuristic heuristic) {
+    private int search(Node node, int g, int threshold, Heuristic heuristic, Set<String> visitedNodes) {
         int h = calculateHeuristic(node.getState(), heuristic);
         int f = g + h;
 
-        // Poda por umbral
         if (f > threshold) return f;
 
-        // Condición de éxito
         if (node.getState().equals(goalSate)) {
             solutionNode = node;
             return -1;
@@ -224,16 +223,20 @@ public class SearchTree {
             if (node.getParent() != null && s.equals(node.getParent().getState())) {
                 continue;
             }
+            if (node.getParent() != null && s.equals(node.getParent().getState())) continue;
+
             Node child = new Node(s);
             child.setParent(node);
 
-            // En IDA*, el costo de paso (g) suele ser 1 por movimiento
-            int temp = search(child, g + 1, threshold, heuristic);
+            visitedNodes.add(child.getState());
+
+            int temp = search(child, g + 1, threshold, heuristic, visitedNodes);
 
             if (temp == -1) return -1;
 
             if (temp < min) min = temp;
         }
+
         return min;
     }
     

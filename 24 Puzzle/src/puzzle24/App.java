@@ -11,7 +11,7 @@ public class App {
 
         do {
             System.out.println("\n------------------------------------------------------------------");
-            System.out.println("\n===== 24 PUZZLE - CONFIGURACIÓN =====");
+            System.out.println("\n===== 24 PUZZLE =====");
             System.out.println("1. Generar tablero FÁCIL (20 movimientos)");
             System.out.println("2. Generar tablero DIFÍCIL (100 movimientos)");
             System.out.println("3. Resolver con Manhattan");
@@ -53,6 +53,8 @@ public class App {
                         }
                     }
                     break;
+                case 5:
+                    break;
                 default:
                     System.out.println("Introduzca una opción correcta.");
                     break;
@@ -60,10 +62,10 @@ public class App {
         } while (opc != 5);
     }
 
-    private static void ejecutarBusqueda(String estado, Heuristic h, String heruristica) {
+    private static void ejecutarBusqueda(String estado, Heuristic h, String heuristica) {
         System.out.println("\n------------------------------------------------------------------");
         System.out.println("Estado inicial: " + estado);
-        System.out.println("Heurística: " + heruristica);
+        System.out.println("Heurística: " + heuristica);
         
         long startTime = System.currentTimeMillis();
         SearchTree search = new SearchTree(new Node(estado), GOAL_STATE);

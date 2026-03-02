@@ -1,136 +1,162 @@
 package puzzle24;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ * Created by HABDOLLA on 1/15/2016.
+ * Modified by Mario Rios on 2026-02-19.
+ * This is a utility class that can do some operations on a node. for example getSuccessors() return the successors of a node
+ */
 public class NodeUtil {
+    
+    /**
+     * Generates all valid successor states for the 8-puzzle game.
+     * 
+     * The empty position (0) can swap with adjacent positions based on grid layout.
+     * Uses an adjacency map to determine valid moves for each position.
+     * 
+     * @param state a 9-character string representing puzzle positions (0-8 left-to-right, top-to-bottom).
+     *              Character '0' represents the empty space.
+     * @return a list of all possible successor states reachable in one move
+     * 
+     * Example with state "023814765":
+     *   Grid layout:      |0|2|3|
+     *                     |8|1|4|
+     *                     |7|6|5|
+     *   
+     *   Valid moves (swapping 0 with adjacent positions):
+     *                     |2|0|3|    |8|2|3|
+     *                     |8|1|4|    |0|1|4|
+     *                     |7|6|5|    |7|6|5|
+     *   
+     *   Return: ["203814765", "823014765"]
+     */
     public static List<String> getSuccessors(String state) {
         List<String> successors = new ArrayList<>();
-        int size = (int) Math.sqrt(state.length()); // 5 para 24 puzzle
-        int zeroPos = state.indexOf('0');
-        int row = zeroPos / size;
-        int col = zeroPos % size;
+        int zeroPos = state.indexOf("0");
+        int row = zeroPos / 5;
+        int col = zeroPos % 5;
+        
+        // Adjacency map: for each position, which positions can it swap with
+        int[][] directions = {
+                {-1, 0}, // arriba
+                {1, 0},  // abajo
+                {0, -1}, // izquierda
+                {0, 1}   // derecha
+        };
 
-        // ARRIBA
-        if (row > 0) {
-            successors.add(swap(state, zeroPos, zeroPos - size));
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
+
+            if (newRow >= 0 && newRow < 5 && newCol >= 0 && newCol < 5) {
+                int newIndex = newRow * 5 + newCol;
+                successors.add(swapPositions(state, zeroPos, newIndex));
+            }
         }
-
-        // ABAJO
-        if (row < size - 1) {
-            successors.add(swap(state, zeroPos, zeroPos + size));
-        }
-
-        // IZQUIERDA
-        if (col > 0) {
-            successors.add(swap(state, zeroPos, zeroPos - 1));
-        }
-
-        // DERECHA
-        if (col < size - 1) {
-            successors.add(swap(state, zeroPos, zeroPos + 1));
-        }
-
+        
         return successors;
     }
-
-    private static String swap(String state, int i, int j) {
+    
+    /**
+     * Swaps characters at two positions in a string.
+     * @param state the original string
+     * @param pos1 first position
+     * @param pos2 second position
+     * @return new string with swapped positions
+     */
+    private static String swapPositions(String state, int pos1, int pos2) {
         char[] arr = state.toCharArray();
-        char temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+        char temp = arr[pos1];
+        arr[pos1] = arr[pos2];
+        arr[pos2] = temp;
         return new String(arr);
     }
 
-    public static void printSolution(Node goalNode, Set<String> visitedNodes, Node root, int time) {
+    /**
+     *
+     *  prints the transitions along with the states starting from the initial states
+     *  to the goal state.
+     *
+     * @author Himan Abdollahpouri
 
+     */
+    // NECESITO LLAMAR AQUI PRINTBOARD
+    public static void printSolution(Node goalNode, Set<String> visitedNodes, Node root, int time) {
         int totalCost = 0;
 
         Stack<Node> solutionStack = new Stack<>();
-        Node currentNode = goalNode;
-
-        while (currentNode != null) {
-            solutionStack.push(currentNode);
-            currentNode = currentNode.getParent();
+        solutionStack.push(goalNode);
+        while (!goalNode.getState().equals(root.getState())) {
+            solutionStack.push(goalNode.getParent());
+            goalNode = goalNode.getParent();
         }
 
-        int moves = solutionStack.size() - 1;
-
-        String sourceState = solutionStack.peek().getState();
+        String sourceState = root.getState();
         int cost = 0;
 
-        while (!solutionStack.isEmpty()) {
+        for (int i = solutionStack.size() - 1; i >= 0; i--) {
+            Node currentNode = solutionStack.get(i);
+            String destinationState = currentNode.getState();
 
-            Node current = solutionStack.pop();
-            String destinationState = current.getState();
-
+            System.out.println("-----------------------------------");
             if (!sourceState.equals(destinationState)) {
-
-                int movedIndex = sourceState.indexOf('0');
-                char movedTile = destinationState.charAt(movedIndex);
-
-                System.out.println("Move " + movedTile + " "
+                System.out.println("Move " + destinationState.charAt(sourceState.indexOf('0')) + " "
                         + findTransition(sourceState, destinationState));
-
-                cost = Character.getNumericValue(movedTile);
+                cost = Character.getNumericValue(destinationState.charAt(sourceState.indexOf('0')));
                 totalCost += cost;
             }
 
-            System.out.println("Solution length (movimientos): " + moves);
-            printBoard(destinationState);
-
             System.out.println("Cost of movement: " + cost);
-            System.out.println("-----------------------------------");
+            System.out.println("Tablero actual:");
+            printBoard(destinationState);
 
             sourceState = destinationState;
         }
 
-        System.out.println("Transitions: " + moves);
-
-        if (visitedNodes != null)
-            System.out.println("Visited states: " + visitedNodes.size());
-        else
-            System.out.println("Visited states: N/A");
-
-        System.out.println("Total cost: " + totalCost);
-        System.out.println("Nodes expanded: " + time);
+        System.out.println("-----------------------------------");
+        System.out.println("** Number of transitions: " + (solutionStack.size() - 1));
+        System.out.println("** Number of visited states: " + (visitedNodes == null ? 0 : visitedNodes.size()));
+        System.out.println("** Total cost: " + totalCost);
+        System.out.println("** Number of Nodes popped: " + time);
     }
 
-    private static void printBoard2(String state) {
-        int size = (int) Math.sqrt(state.length());
+//*******************************************************************************************
+    /**
+     *
+     * @return returns the transition between two states.
+     *
+     * @author Himan Abdollahpouri
 
-        for (int r = 0; r < size; r++) {
-            for (int c = 0; c < size; c++) {
-                System.out.print(state.charAt(r * size + c) + " ");
-            }
-            System.out.println();
+     */
+    public static MovementType findTransition(String source, String destination) {
+        int zero_position_difference = destination.indexOf('0') - source.indexOf('0');
+        switch (zero_position_difference) {
+            case -5:
+                return MovementType.DOWN;
+            case 5:
+                return MovementType.UP;
+            case 1:
+                return MovementType.LEFT;
+            case -1:
+                return MovementType.RIGHT;
         }
-        System.out.println();
+        return null;
     }
-    
+
     private static void printBoard(String state) {
         int size = (int) Math.sqrt(state.length());
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 char tile = state.charAt(r * size + c);
-                System.out.printf("%2s ", (tile == '0' ? "." : tile)); 
+                System.out.printf("%2s ", (tile == '0' ? "." : tile));
             }
             System.out.println();
         }
         System.out.println();
-    }
-
-    public static MovementType findTransition(String source, String destination) {
-        int size = (int) Math.sqrt(source.length());
-        int diff = destination.indexOf('0') - source.indexOf('0');
-
-        if (diff == -size) return MovementType.DOWN;
-        if (diff == size) return MovementType.UP;
-        if (diff == 1) return MovementType.LEFT;
-        if (diff == -1) return MovementType.RIGHT;
-
-        return null;
     }
 }
