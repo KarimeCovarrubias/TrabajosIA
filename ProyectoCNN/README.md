@@ -25,7 +25,7 @@ python3 src/Entrenamiento.py
 
 # Guardar requisitos
 ```sh
-pip pip freeze > requisitos.txt
+pip freeze > requisitos.txt
 ```
 
 # Ejecutar el proyecto
