@@ -1,4 +1,5 @@
 import cv2
+import os
 import torch
 import numpy as np
 import pickle
@@ -6,8 +7,17 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 from tensorflow.keras.models import load_model
 
 # cargar modelo entrenado
-model = load_model("face_classifier.h5")
-labels = pickle.load(open("labels.pkl", "rb"))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model_path = os.path.join(BASE_DIR, "..", "modelo", "face_classifier.h5")
+labels_path = os.path.join(BASE_DIR, "..", "modelo", "labels.pkl")
+
+print("Buscando modelo en:", model_path)
+print("Existe?", os.path.exists(model_path))
+
+model = load_model(model_path)
+labels = pickle.load(open(labels_path, "rb"))
+
 mtcnn = MTCNN(image_size=160)
 facenet = InceptionResnetV1(pretrained='vggface2').eval()
 
