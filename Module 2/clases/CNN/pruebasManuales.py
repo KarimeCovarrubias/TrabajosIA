@@ -1,6 +1,16 @@
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing import image
 
+# ---------------------------------------
+# Se agregó lo siguiente
+import numpy as np
+import tensorflow as tf
+import os
+
+# Define las clases manualmente (deben estar en el mismo orden que las carpetas)
+class_names = ['ben_afflek', 'elton_john', 'jerry_seinfeld', 'madonna', 'mindy_kaling']
+# ---------------------------------------
+
 def predict_celebrity(img_path, model_path='celebrity_model.h5'):
     # Load model and image
     model = tf.keras.models.load_model(model_path)
