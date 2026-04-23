@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt
+from tensorflow.keras.preprocessing import image
+
+def predict_celebrity(img_path, model_path='celebrity_model.h5'):
+    # Load model and image
+    model = tf.keras.models.load_model(model_path)
+    img = image.load_img(img_path, target_size=(160, 160))
+    
+    # Pre-process
+    img_array = image.img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0) # Create batch axis
+
+    # Predict
+    predictions = model.predict(img_array)
+    score = np.max(predictions)
+    class_idx = np.argmax(predictions)
+    
+    # Display
+    plt.imshow(img)
+    plt.title(f"Prediction: {class_names[class_idx]} ({100 * score:.2f}%)")
+    plt.axis('off')
+    plt.show()
+
+# Usage:
+# predict_celebrity('my_test_image.jpg')
