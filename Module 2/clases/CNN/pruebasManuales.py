@@ -9,9 +9,11 @@ import os
 
 # Define las clases manualmente (deben estar en el mismo orden que las carpetas)
 class_names = ['ben_afflek', 'elton_john', 'jerry_seinfeld', 'madonna', 'mindy_kaling']
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # ---------------------------------------
 
-def predict_celebrity(img_path, model_path='celebrity_model.h5'):
+def predict_celebrity(img_path, model_path=os.path.join(BASE_DIR, 'celebrity_model.h5')):
     # Load model and image
     model = tf.keras.models.load_model(model_path)
     img = image.load_img(img_path, target_size=(160, 160))
@@ -32,4 +34,4 @@ def predict_celebrity(img_path, model_path='celebrity_model.h5'):
     plt.show()
 
 # Usage:
-# predict_celebrity('my_test_image.jpg')
+predict_celebrity(os.path.join(BASE_DIR, 'data', 'val', 'madonna', 'madonna1.jpg'))

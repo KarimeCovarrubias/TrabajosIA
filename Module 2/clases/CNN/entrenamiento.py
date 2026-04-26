@@ -46,7 +46,9 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 
 # 3. Train and Save
 model.fit(train_gen, validation_data=val_gen, epochs=5)
-model.save('celebrity_model.h5')
+# Se modificó la ruta para guardar el archivo .h5 en la misma carpeta (CNN)
+model_path = os.path.join(BASE_DIR, 'celebrity_model.h5')
+model.save(model_path)
 
 # Store class names for prediction
 class_names = list(train_gen.class_indices.keys())
