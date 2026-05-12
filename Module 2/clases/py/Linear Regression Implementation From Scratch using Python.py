@@ -2,6 +2,8 @@
 
 # Importing libraries
 
+import os
+
 import numpy as np
 
 import pandas as pd
@@ -80,7 +82,10 @@ def main() :
     
     # Importing dataset
     
-    df = pd.read_csv( "salary_data.csv" )
+    # df = pd.read_csv( "salary_data.csv" )
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(BASE_DIR, "..", "..", "src", "data", "Salary_Data.csv")
+    df = pd.read_csv(csv_path)
 
     X = df.iloc[:,:-1].values
 
