@@ -1,5 +1,6 @@
 # TrabajosIA
 
+
 Trabajos de la clase de Inteligencia Artificial
 
 Alumna: Covarrubias Osuna Dairy Karime
