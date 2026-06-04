@@ -1,0 +1,53 @@
+Cálculo Diferencial:APROBADA
+Fundamentos de programación:APROBADA
+Taller de ética:APROBADA
+Matemáticas discretas:APROBADA
+Taller de Administración:APROBADA
+Fundamentos de Investigacipon:APROBADA
+Cálculo Integral:APROBADA
+Programación Orientada a Objetos:APROBADA
+Contabilidad Financiera:APROBADA
+Química:APROBADA
+Desarrollo Sustentable:APROBADA
+Probabilidad y Estadística:APROBADA
+Cálculo Vectorial:APROBADA
+Estructura de Datos:APROBADA
+Cultura Empresarial:APROBADA
+Investigación de Operaciones:APROBADA
+Fundamentos de Telecomunicaciones:APROBADA
+Física General:APROBADA
+Álgebra Lineal:APROBADA
+Métodos Numéricos:APROBADA
+Graficación:APROBADA
+Fundamentos de Base de Datos:APROBADA
+Simulación:EN_CURSO
+Principios Eléctricos y Ap. Digitales:APROBADA
+Ecuaciones Diferenciales:APROBADA
+Tópicos Avanzados de Programación:EN_CURSO
+Sistemas Operativos:APROBADA
+Taller de Base de Datos:EN_CURSO
+Fundamentos de Ingeniería de software:DISPONIBLE
+Arquitectura de Computadoras:APROBADA
+Lenguajes y Autómatas I:APROBADA
+Redes de Computadora:APROBADA
+Taller de Sistemas Operativos:APROBADA
+Administración de Base de Datos:BLOQUEADA
+Ingeniería de software:BLOQUEADA
+Lenguaje de Interfaz:APROBADA
+Analítica y Ciencia de Datos (optativa):BLOQUEADA
+Lenguajes y Autómatas II:DISPONIBLE
+Conmutación y enrutamiento de Redes de datos:DISPONIBLE
+Taller de Investigación I:EN_CURSO
+Gestión de Proyectos de Software:BLOQUEADA
+Sistemas Programables:EN_CURSO
+Programación Web:BLOQUEADA
+Administración de Redes:BLOQUEADA
+Taller de Investigación II:BLOQUEADA
+Evaluación de Proyectos de TI:BLOQUEADA
+Gestión de Operaciones de TI:BLOQUEADA
+Programación Lógica y Funcional:EN_CURSO
+Inteligencia Artificial:EN_CURSO
+Tópicos de Inteligencia Artificial:BLOQUEADA
+Gestión de Seguridad de la Información:BLOQUEADA
+Inteligencia de Negocios:BLOQUEADA
+RESISDENCIAS PROFESIONALES:BLOQUEADA
